@@ -1,0 +1,23 @@
+# docker-compose.yml
+version: "3.8"
+
+services:
+  # MongoDB Service
+  db:
+    image: mongo:latest # Official MongoDB image
+    container_name: mongodb
+    restart: always # Restart if the container fails
+    ports:
+      - "27017:27017" # Expose MongoDB port
+
+  # Node.js Application Service
+  app:
+    build: . # Build from the current directory (Dockerfile)
+    container_name: node-app
+    depends_on:
+      - db # Ensure MongoDB is started first
+    environment:
+      - MONGO_URI=mongodb://db:27017/mydb # Database URI for Node.js to connect
+    restart: always # Restart the app if it fails
+    ports:
+      - "3000:3000" # Expose Node.js app port
